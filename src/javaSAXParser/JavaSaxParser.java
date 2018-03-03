@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package java.sax.parser;
+package javaSAXParser;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,12 +21,16 @@ public class JavaSaxParser extends Application
     @Override
     public void start(Stage stage) throws Exception
     {
-        Parent root = FXMLLoader.load(getClass().getResource("SAXParserFXMLDocument.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("SAXParserFXMLDocument.fxml"));
+        Parent root = loader.load();
         
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
         stage.show();
+        
+        SAXParserFXMLDocumentController controller = (SAXParserFXMLDocumentController) loader.getController();
+        controller.start(stage);
     }
 
     /**
