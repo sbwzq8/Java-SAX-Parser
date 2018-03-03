@@ -6,7 +6,9 @@
 package javaSAXParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -16,22 +18,55 @@ import java.util.List;
  */
 public class XMLNode
 {
-    private String key = "";
-    private String value = "";
+    private String name = "";
+    private String contents = "";
+    private Map<String, List<XMLNode>> properties;
+    private Map<String, String> attributes;
     
-    private List<XMLNode> children;
     
-    public XMLNode(String key, String value){
-        this.key = key;
-        this.value = value;
+    public XMLNode(){
+        
     }
     
-    public String getKey(){
-        return key;
+    public XMLNode(String name, String contents){
+        this.name = name;
+        this.contents = contents;
     }
     
-    public String getValue(){
-        return value;
+    public String getName(){
+        return name;
+    }
+    
+    public void setName(String name){
+        this.name = name;
+    }
+    
+    public String getContents(){
+        return contents;
+    }
+    
+    public void setContents(String contents){
+        this.contents = contents;
+    }
+    
+    public void addProperty(String name, XMLNode node){
+        if(properties == null) {
+            properties = new HashMap<>();
+        }
+        properties.putIfAbsent(name, new ArrayList<XMLNode>());
+        properties.get(name).add(node);
+    }
+    
+    public Map<String, List<XMLNode>> getProperties(){
+        return properties;
+    }
+    
+    public void addAttributes(String name, String contents){
+        this.attributes.put(name, contents);
+    }
+    
+    public Map<String,String> getAttributes(){
+        return attributes;
     }
     
 }

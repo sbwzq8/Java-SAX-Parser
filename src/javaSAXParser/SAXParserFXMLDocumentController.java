@@ -26,10 +26,6 @@ public class SAXParserFXMLDocumentController implements Initializable
 {
     @FXML
     private MenuItem openMenuItem;
-    @FXML 
-    private void handleFileOpen(ActionEvent event){
-        
-    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb)

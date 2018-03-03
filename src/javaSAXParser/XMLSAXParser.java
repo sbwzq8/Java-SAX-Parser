@@ -20,7 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public class XMLSAXParser
 {
     static XMLNode root;
-    public static XMLNode load(File xmlCourseFile) throws Exception {
+    public static XMLNode load(File xmlFile) throws Exception {
         
         try{
             SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -29,8 +29,8 @@ public class XMLSAXParser
             DefaultHandler handler = new DefaultHandler() {
                 Stack<XMLNode> stack;
                 XMLNode currentNode = null;
-                String key = "";
-                String value = "";
+                String currentElementName = "";
+                String currentElementData = "";
                 
                 @Override
                 public void startDocument() {
@@ -38,18 +38,41 @@ public class XMLSAXParser
                     stack = new Stack<>();
                 }
                 
-                 @Override
+                @Override
                 public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-                    
+                    XMLNode node = new XMLNode();
+                    node.setName(qName);
+                    for(int i = 0; i < attributes.getLength(); i++){
+                        node.addAttributes(attributes.getQName(i), attributes.getValue(i));
+                    }
+                    stack.push(node);
+                    if(currentNode != null) {
+                        currentNode.addProperty(qName, node);
+                    }
+                    currentNode = node;
                 }
                 
                 @Override
                 public void endElement(String uri, String localName, String qName) throws SAXException {
-                    
+                    if(stack != null){
+                        XMLNode poppedNode = stack.pop();
+                        if(stack.isEmpty()){
+                            root = poppedNode;
+                            currentNode = null;
+                        }else {
+                            currentNode = stack.lastElement();
+                        }
+                    }
+                }
+                
+                @Override
+                public void characters(char ch[], int start, int length) throws SAXException {
+                    if(currentNode != null){
+                        currentNode.setContents(currentNode.getContents() + String.valueOf(ch, start, length));
+                    }
                 }
             };
-            
-            
+            saxParser.parse(xmlFile, handler);            
         }catch (ParserConfigurationException | SAXException e) {
             throw e;
         }
