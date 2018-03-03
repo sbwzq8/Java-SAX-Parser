@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TreeView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -26,6 +27,9 @@ public class SAXParserFXMLDocumentController implements Initializable
 {
     @FXML
     private MenuItem openMenuItem;
+    
+    @FXML
+    private TreeView domTreeRepresentation;
     
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -40,7 +44,14 @@ public class SAXParserFXMLDocumentController implements Initializable
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files", "*.xml"));
             File selected = chooser.showOpenDialog(stage);
             if(selected != null) {
-                //send file to parser
+                try{
+                    XMLNode xmlRoot = XMLSAXParser.load(selected);
+//                    TreeItem treeRoot = new TreeItem();
+//                    treeRoot.setValue(xmlRoot.getName());
+//                    domTreeRepresentation.setRoot(treeRoot);
+                }catch(Exception e){
+                    System.out.println("Error parsing xml: " + e.getMessage());
+                }
             }
        });
     }

@@ -29,13 +29,13 @@ public class XMLSAXParser
             DefaultHandler handler = new DefaultHandler() {
                 Stack<XMLNode> stack;
                 XMLNode currentNode = null;
-                String currentElementName = "";
+                String currentElementName = null;
                 String currentElementData = "";
                 
                 @Override
                 public void startDocument() {
                     root = null;
-                    stack = new Stack<>();
+                    stack = new Stack<XMLNode>();
                 }
                 
                 @Override
@@ -56,6 +56,7 @@ public class XMLSAXParser
                 public void endElement(String uri, String localName, String qName) throws SAXException {
                     if(stack != null){
                         XMLNode poppedNode = stack.pop();
+                        poppedNode.setContents(poppedNode.getContents().trim());
                         if(stack.isEmpty()){
                             root = poppedNode;
                             currentNode = null;
@@ -73,13 +74,21 @@ public class XMLSAXParser
                 }
             };
             saxParser.parse(xmlFile, handler);            
-        }catch (ParserConfigurationException | SAXException e) {
+        }catch (Exception e) {
+            if(root == null){
+                System.out.println("Root is null");
+            }
+            else{
+                System.out.println("Root is NOT null");
+            }
+            System.out.println("Exception in parser: " + e.getMessage());
             throw e;
         }
-        
-        
-        
-        
+        if(root == null){
+            System.out.println("Root is NULL!!!!!");
+        }else{
+            System.out.println("Root is NOT NULL");
+        }
         return root;
     }
 }
